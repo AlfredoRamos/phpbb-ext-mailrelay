@@ -1,0 +1,67 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_MAILRELAY') }}</h1>
+{{ lang('ACP_MAILRELAY_EXPLAIN') }}
+
+{% if VALIDATION_ERRORS %}
+<div class="errorbox">
+	{% for ERROR in VALIDATION_ERRORS %}
+	<p>{{ ERROR.MESSAGE }}</p>
+	{% endfor %}
+</div>
+{% endif %}
+
+<form id="mailrelay-settings" method="POST" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('SETTINGS') }}</legend>
+		<dl>
+			<dt>
+				<label for="mailrelay-hostname">{{ lang('ACP_MAILRELAY_HOSTNAME') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_HOSTNAME_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="text" id="mailrelay-hostname" name="mailrelay_hostname" required="required" autocomplete="off" class="medium"{% if MAILRELAY_HOSTNAME %} value="{{ MAILRELAY_HOSTNAME }}"{% endif %}>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="mailrelay-api-key">{{ lang('ACP_MAILRELAY_API_KEY') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_API_KEY_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="password" id="mailrelay-api-key" name="mailrelay_api_key" required="required" autocomplete="off" class="medium"{% if MAILRELAY_API_KEY %} value="{{ MAILRELAY_API_KEY }}"{% endif %}>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="mailrelay-auto-sync">{{ lang('ACP_MAILRELAY_AUTO_SYNC') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_AUTO_SYNC_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" id="mailrelay-auto-sync" name="mailrelay_auto_sync" value="1"{% if MAILRELAY_AUTO_SYNC %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
+				<label><input type="radio" name="mailrelay_auto_sync" value="0"{% if not MAILRELAY_AUTO_SYNC %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="mailrelay-api-key">{{ lang('ACP_MAILRELAY_SYNC_PACKET_SIZE') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_SYNC_PACKET_SIZE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="number" id="mailrelay-sync-packet-size" name="mailrelay_sync_packet_size" required="required" autocomplete="off" min="1" max="99999" value="{% if MAILRELAY_SYNC_PACKET_SIZE %}{{ MAILRELAY_API_KEY }}{% else %}150{% endif %}">
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input type="reset" class="button2" value="{{ lang('RESET') }}">
+			<input type="submit" name="submit" class="button1" value="{{ lang('SUBMIT') }}">
+		</p>
+	</fieldset>
+
+	{{ S_FORM_TOKEN }}
+</form>
+
+{% include 'overall_footer.html' %}

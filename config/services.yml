@@ -1,0 +1,16 @@
+services:
+    alfredoramos.mailrelay.helper:
+        class: alfredoramos\mailrelay\includes\helper
+        arguments:
+            - '@language'
+
+    alfredoramos.mailrelay.acp.controller:
+        class: alfredoramos\mailrelay\controller\acp
+        arguments:
+            - '@config'
+            - '@template'
+            - '@request'
+            - '@language'
+            - '@user'
+            - '@log'
+            - '@alfredoramos.mailrelay.helper'
