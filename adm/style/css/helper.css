@@ -1,0 +1,9 @@
+#mailrelay-settings [type="text"],
+#mailrelay-settings [type="password"] {
+	font-family: Consolas, monaco, monospace;
+}
+
+.toggle-api-key {
+	cursor: pointer;
+	color: #d58512;
+}

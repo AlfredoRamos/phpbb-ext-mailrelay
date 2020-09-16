@@ -1,0 +1,4 @@
+{% if IN_MAILRELAY_SETTINGS and not INCLUDED_MAILRELAY_HELPER_JS %}
+{% INCLUDEJS '@alfredoramos_mailrelay/js/helper.js' %}
+{%- set INCLUDED_MAILRELAY_HELPER_JS = true -%}
+{% endif %}

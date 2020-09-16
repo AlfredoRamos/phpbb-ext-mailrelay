@@ -1,0 +1,4 @@
+{% if IN_MAILRELAY_SETTINGS and not INCLUDED_MAILRELAY_HELPER_CSS %}
+{% INCLUDECSS '@alfredoramos_mailrelay/css/helper.css' %}
+{%- set INCLUDED_MAILRELAY_HELPER_CSS = true -%}
+{% endif %}

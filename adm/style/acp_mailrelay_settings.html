@@ -30,6 +30,9 @@
 			</dt>
 			<dd>
 				<input type="password" id="mailrelay-api-key" name="mailrelay_api_key" required="required" autocomplete="off" class="medium"{% if MAILRELAY_API_KEY %} value="{{ MAILRELAY_API_KEY }}"{% endif %}>
+				<span class="toggle-api-key">
+					<i class="icon fa-lg fa-eye" aria-hidden="true"></i>
+				</span>
 			</dd>
 		</dl>
 		<dl>
