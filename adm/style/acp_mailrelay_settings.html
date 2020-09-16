@@ -34,21 +34,36 @@
 		</dl>
 		<dl>
 			<dt>
-				<label for="mailrelay-auto-sync">{{ lang('ACP_MAILRELAY_AUTO_SYNC') ~ lang('COLON') }}</label>
-				<br><span>{{ lang('ACP_MAILRELAY_AUTO_SYNC_EXPLAIN') }}</span>
+				<label for="mailrelay-group-id">{{ lang('ACP_MAILRELAY_GROUP_ID') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_GROUP_ID_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				<label><input type="radio" id="mailrelay-auto-sync" name="mailrelay_auto_sync" value="1"{% if MAILRELAY_AUTO_SYNC %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
-				<label><input type="radio" name="mailrelay_auto_sync" value="0"{% if not MAILRELAY_AUTO_SYNC %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+				<input type="number" id="mailrelay-group-id" name="mailrelay_group_id" required="required" autocomplete="off" min="1" max="99999" value="{% if MAILRELAY_GROUP_ID %}{{ MAILRELAY_GROUP_ID }}{% else %}1{% endif %}">
 			</dd>
 		</dl>
 		<dl>
 			<dt>
-				<label for="mailrelay-api-key">{{ lang('ACP_MAILRELAY_SYNC_PACKET_SIZE') ~ lang('COLON') }}</label>
+				<label for="mailrelay-sync-packet-size">{{ lang('ACP_MAILRELAY_SYNC_PACKET_SIZE') ~ lang('COLON') }}</label>
 				<br><span>{{ lang('ACP_MAILRELAY_SYNC_PACKET_SIZE_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				<input type="number" id="mailrelay-sync-packet-size" name="mailrelay_sync_packet_size" required="required" autocomplete="off" min="1" max="99999" value="{% if MAILRELAY_SYNC_PACKET_SIZE %}{{ MAILRELAY_API_KEY }}{% else %}150{% endif %}">
+				<input type="number" id="mailrelay-sync-packet-size" name="mailrelay_sync_packet_size" required="required" autocomplete="off" min="1" max="99999" value="{% if MAILRELAY_SYNC_PACKET_SIZE %}{{ MAILRELAY_SYNC_PACKET_SIZE }}{% else %}150{% endif %}">
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="mailrelay-sync-frequency">{{ lang('ACP_MAILRELAY_SYNC_FREQUENCY') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_SYNC_FREQUENCY_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="number" id="mailrelay-sync-frequency" name="mailrelay_sync_frequency_number" required="required" autocomplete="off" min="1" max="99999" value="{% if MAILRELAY_SYNC_FREQUENCY %}{{ MAILRELAY_SYNC_FREQUENCY }}{% else %}1{% endif %}">
+				{% if MAILRELAY_SYNC_FREQUENCY_TYPES %}
+				<select name="mailrelay_sync_frequency_type">
+					{% for TYPE in MAILRELAY_SYNC_FREQUENCY_TYPES %}
+					<option value="{{ TYPE.KEY }}"{% if TYPE.ENABLED %} selected="selected"{% endif%}>{{ TYPE.NAME }}</option>
+					{% endfor %}
+				</select>
+				{% endif %}
 			</dd>
 		</dl>
 	</fieldset>

@@ -26,7 +26,7 @@ class main_module
 	/** @var \phpbb\language\language */
 	protected $language;
 
-	/** @var \alfredoramos\imgur\controller\acp */
+	/** @var \alfredoramos\mailrelay\controller\acp */
 	protected $acp_controller;
 
 	/**
@@ -81,6 +81,9 @@ class main_module
 		}
 
 		// Assign global template variable
-		$this->template->assign_var('U_ACTION', $this->u_action);
+		$this->template->assign_vars([
+			'U_ACTION' => $this->u_action,
+			'IN_MAILRELAY_SETTINGS' => true
+		]);
 	}
 }

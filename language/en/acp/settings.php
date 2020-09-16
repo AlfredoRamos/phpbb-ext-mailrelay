@@ -32,11 +32,19 @@ $lang = array_merge($lang, [
 	'ACP_MAILRELAY_API_KEY' => 'API key',
 	'ACP_MAILRELAY_API_KEY_EXPLAIN' => 'Any of the API keys you have generated in Mailrelay <samp>Settings</samp> > <samp>API keys</samp>.',
 
-	'ACP_MAILRELAY_AUTO_SYNC' => 'Automatic syncronization',
-	'ACP_MAILRELAY_AUTO_SYNC_EXPLAIN' => 'Syncronize user emails to the Mailrelay <samp>Subscribers</samp> list using a cron task. Banned and innactive users are excluded by default.',
+	'ACP_MAILRELAY_GROUP_ID' => 'Group ID',
+	'ACP_MAILRELAY_GROUP_ID_EXPLAIN' => 'The ID of the Mailrelay group where all the emails will be synced to. It must exist in Mailrelay <samp>Subscribers</samp> > <samp>Groups</samp>.',
 
 	'ACP_MAILRELAY_SYNC_PACKET_SIZE' => 'Syncronization packet size',
 	'ACP_MAILRELAY_SYNC_PACKET_SIZE_EXPLAIN' => 'Maximum number of user emails to be processed when synced. A high number could lead to a degradation of the board performance, by using excesive server resources.',
+
+	'ACP_MAILRELAY_SYNC_FREQUENCY' => 'Sync frequency',
+	'ACP_MAILRELAY_SYNC_FREQUENCY_EXPLAIN' => 'Time between sync events.',
+
+	'ACP_MAILRELAY_HOUR' => 'hour',
+	'ACP_MAILRELAY_DAY' => 'day',
+	'ACP_MAILRELAY_WEEK' => 'week',
+	'ACP_MAILRELAY_MONTH' => 'month',
 
 	'ACP_MAILRELAY_VALIDATE_INVALID_FIELDS' => 'Invalid values for fields: <samp>%s</samp>',
 ]);

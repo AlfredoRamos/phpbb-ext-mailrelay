@@ -47,10 +47,16 @@ class acp_mailrelay_test extends \phpbb_functional_test_case
 		$this->assertTrue($form->has('mailrelay_api_key'));
 		$this->assertSame('', $form->get('mailrelay_api_key')->getValue());
 
-		$this->assertTrue($form->has('mailrelay_auto_sync'));
-		$this->assertSame('1', $form->get('mailrelay_auto_sync')->getValue());
+		$this->assertTrue($form->has('mailrelay_group_id'));
+		$this->assertSame('1', $form->get('mailrelay_group_id')->getValue());
 
 		$this->assertTrue($form->has('mailrelay_sync_packet_size'));
 		$this->assertSame('150', $form->get('mailrelay_sync_packet_size')->getValue());
+
+		$this->assertTrue($form->has('mailrelay_sync_frequency_number'));
+		$this->assertSame('1', $form->get('mailrelay_sync_frequency_number')->getValue());
+
+		$this->assertTrue($form->has('mailrelay_sync_frequency_number'));
+		$this->assertSame('hour', $form->get('mailrelay_sync_frequency_type')->getValue());
 	}
 }

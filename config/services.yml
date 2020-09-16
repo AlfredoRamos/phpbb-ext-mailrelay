@@ -1,8 +1,19 @@
+imports:
+    - { resource: cron.yml }
+
 services:
+    alfredoramos.mailrelay.mailrelay:
+        class: alfredoramos\mailrelay\includes\mailrelay
+
     alfredoramos.mailrelay.helper:
         class: alfredoramos\mailrelay\includes\helper
         arguments:
+            - '@dbal.conn'
+            - '@config'
             - '@language'
+            - '%tables.users%'
+            - '%tables.groups%'
+            - '%tables.banlist%'
 
     alfredoramos.mailrelay.acp.controller:
         class: alfredoramos\mailrelay\controller\acp
@@ -14,3 +25,4 @@ services:
             - '@user'
             - '@log'
             - '@alfredoramos.mailrelay.helper'
+            - '@alfredoramos.mailrelay.mailrelay'
