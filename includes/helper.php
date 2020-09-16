@@ -9,21 +9,107 @@
 
 namespace alfredoramos\mailrelay\includes;
 
+use phpbb\db\driver\factory as database;
+use phpbb\config\config;
 use phpbb\language\language;
 
 class helper
 {
+	/** @var \phpbb\db\driver\factory */
+	protected $db;
+
+	/** @var \phpbb\config\config */
+	protected $config;
+
 	/** @var \phpbb\language\language */
 	protected $language;
+
+	/** @var array */
+	protected $tables;
 
 	/**
 	 * Helper constructor.
 	 *
+	 * @param \phpbb\db\driver\factory	$db
+	 * @param \phpbb\config\config		$config
+	 * @param \phpbb\language\language	$language
+	 * @param string					$users_table
+	 * @param string					$groups_table
+	 * @param string					$banlist_table
+	 *
 	 * @return void
 	 */
-	public function __construct(language $language)
+	public function __construct(database $db, config $config, language $language, $users_table, $groups_table, $banlist_table)
 	{
+		$this->db = $db;
+		$this->config = $config;
 		$this->language = $language;
+
+		if (empty($this->tables))
+		{
+			$this->tables['users'] = $users_table;
+			$this->tables['groups'] = $groups_table;
+			$this->tables['banlist'] = $banlist_table;
+		}
+	}
+
+	/**
+	 * Get users list to sync.
+	 *
+	 * The following users are excluded:
+	 *
+	 *   - Bots
+	 *   - Users with empty emails
+	 *   - Banned users
+	 *   - Users that disable mass emails
+	 *
+	 * @return array
+	 */
+	public function get_users()
+	{
+		$last_user_id = abs((int) $this->config['mailrelay_last_user_sync']);
+		$limit = abs((int) $this->config['mailrelay_sync_packet_size']);
+		$limit = ($limit === 0 || $limit > 99999) ? 150 : $limit;
+		$seconds = (24 * 60 * 60);
+
+		// Exclude bots
+		$sql_where = 'u.user_type <> ' . USER_IGNORE;
+
+		// Exclude users with empty email
+		$sql_where .= " AND u.user_email <> ''";
+
+		// Exclude users that do not want to receive mass emails
+		$sql_where .= ' AND u.user_allow_massemail <> 1';
+
+		// Exclude banned users
+		$sql_where .= ' AND u.user_id NOT IN (
+			SELECT b.ban_userid
+			FROM ' . $this->tables['banlist'] . ' AS b
+			WHERE b.ban_userid = u.user_id
+		)';
+
+		// Exclude users already processed
+		if (!empty($last_user_id))
+		{
+			$sql_where .= ' AND u.user_id > ' . $last_user_id;
+		}
+
+		$sql = 'SELECT
+				u.user_id AS id,
+				u.username AS name,
+				u.user_email AS email,
+				g.group_name AS group
+			FROM ' . $this->tables['users'] . ' AS u
+			INNER JOIN ' . $this->tables['groups'] . ' AS g
+				ON g.group_id = u.group_id
+			WHERE ' . $sql_where . '
+			ORDER BY u.user_id ASC';
+
+		$result = $this->db->sql_query_limit($sql, $limit, 0, $seconds);
+		$users = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		return $users;
 	}
 
 	/**
@@ -115,5 +201,69 @@ class helper
 
 		// Return a copy
 		return $data;
+	}
+
+	/**
+	 * Parse frequency string.
+	 *
+	 * It only parses the format: [+N S].
+	 *
+	 * N being a number, and S being a string ('hour', 'day', 'week', 'month').
+	 *
+	 * @param string $frequency
+	 *
+	 * @return array [integer, string]
+	 */
+	public function parse_frequency($frequency = '')
+	{
+		if (empty($frequency))
+		{
+			return [];
+		}
+
+		$allowed = $this->allowed_values('frequencies');
+
+		$frequency = explode(' ', $frequency);
+		$this->filter_empty_items($frequency);
+
+		// First element is a number
+		// Fallback to 1
+		$frequency[0] = abs((int) str_replace('+', '', $frequency[0]));
+		$frequency[0] = ($frequency[0] < 1) ? 1 : $frequency[0];
+		$frequency[0] = ($frequency[0] > 99999) ? 99999 : $frequency[0];
+
+		// Second element is a string
+		$frequency[1] = trim($frequency[1]);
+		$frequency[1] = !in_array($frequency[1], $allowed) ? $allowed[1] : $frequency[1];
+
+		return $frequency;
+	}
+
+	/**
+	 * Allowed values for settings.
+	 *
+	 * @param string $kind
+	 *
+	 * @return array
+	 */
+	public function allowed_values($kind = '')
+	{
+		// Allowed values
+		$allowed = [
+			'domains' => ['ipzmarketing.com', 'ip-zone.com'],
+			'frequencies' => ['hour', 'day', 'week', 'month']
+		];
+
+		// Value casting
+		$kind = trim($kind);
+
+		// Get specific kind
+		if (!empty($kind) && !empty($allowed[$kind]))
+		{
+			return $allowed[$kind];
+		}
+
+		// Return whole array
+		return $allowed;
 	}
 }

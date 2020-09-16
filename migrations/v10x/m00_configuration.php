@@ -23,7 +23,7 @@ class m00_configuration extends migration
 		return [
 			[
 				'config.add',
-				['mailrelay_host', '']
+				['mailrelay_hostname', '']
 			],
 			[
 				'config.add',
@@ -31,11 +31,15 @@ class m00_configuration extends migration
 			],
 			[
 				'config.add',
-				['mailrelay_auto_sync', 1]
+				['mailrelay_group_id', 1]
 			],
 			[
 				'config.add',
 				['mailrelay_sync_packet_size', 150]
+			],
+			[
+				'config.add',
+				['mailrelay_sync_frequency', '+1 hour']
 			],
 			[
 				'config.add',
