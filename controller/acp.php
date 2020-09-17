@@ -96,6 +96,12 @@ class acp
 				'filter' => FILTER_VALIDATE_DOMAIN,
 				'flags' => FILTER_FLAG_HOSTNAME
 			],
+			'mailrelay_domain' => [
+				'filter' => FILTER_VALIDATE_REGEXP,
+				'options' => [
+					'regexp' => '#^(?:' . implode('|', array_map('preg_quote', $allowed['domains'])) . ')$#'
+				]
+			],
 			'mailrelay_api_key' => [
 				'filter' => FILTER_VALIDATE_REGEXP,
 				'options' => [
@@ -126,7 +132,7 @@ class acp
 			'mailrelay_sync_frequency_type' => [
 				'filter' => FILTER_VALIDATE_REGEXP,
 				'options' => [
-					'regexp' => '#^hours?|days?|weeks?|months?$#'
+					'regexp' => '#^(?:' . implode('|', array_map('preg_quote', $allowed['frequencies'])) . ')$#'
 				]
 			]
 		];
@@ -146,6 +152,7 @@ class acp
 			// Form data
 			$fields = [
 				'mailrelay_hostname' => $this->request->variable('mailrelay_hostname', ''),
+				'mailrelay_domain' => $this->request->variable('mailrelay_domain', 'ipzmarketing.com'),
 				'mailrelay_api_key' => $this->request->variable('mailrelay_api_key', ''),
 				'mailrelay_group_id' => $this->request->variable('mailrelay_group_id', 1),
 				'mailrelay_sync_packet_size' => $this->request->variable('mailrelay_sync_packet_size', 150),
@@ -156,9 +163,11 @@ class acp
 			// Validate Mailrelay domain
 			if (!empty($fields['mailrelay_hostname']))
 			{
-				$domains = array_map('preg_quote', $allowed['domains']);
-				$regexp = '#\.(?:' . implode('|', $domains) . ')$#';
-				$fields['mailrelay_hostname'] = !preg_match($regexp, $fields['mailrelay_hostname']) ? '' : $fields['mailrelay_hostname'];
+				// Hostname must not include Mailrelay domain
+				$fields['mailrelay_hostname'] = str_replace($allowed['domains'], '', $fields['mailrelay_hostname']);
+
+				// Hostname can't start or end with a dot
+				$fields['mailrelay_hostname'] = trim($fields['mailrelay_hostname'], '.');
 			}
 
 			// Validation check
@@ -212,6 +221,15 @@ class acp
 			'NUMBER' => $sync_frequency[0],
 			'TYPE' => $sync_frequency[1]
 		]);
+
+		// Assign allowed Mailrelay domains
+		foreach ($allowed['domains'] as $domain)
+		{
+			$this->template->assign_block_vars('MAILRELAY_DOMAINS', [
+				'KEY' => $domain,
+				'ENABLED' => ($domain === $this->config['mailrelay_domain'])
+			]);
+		}
 
 		// Assign allowed frequency values
 		foreach ($allowed['frequencies'] as $type)

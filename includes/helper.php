@@ -54,6 +54,30 @@ class helper
 	}
 
 	/**
+	 * Get Mailrelay hostname.
+	 *
+	 * @return string
+	 */
+	public function get_hostname()
+	{
+		if (empty($this->config['mailrelay_hostname']))
+		{
+			return '';
+		}
+
+		if (empty($this->config['mailrelay_domain']))
+		{
+			$allowed = $this->allowed_values('domains');
+			$this->config->set('mailrelay_domain', $allowed[0]);
+		}
+
+		return vsprintf('%1$s.%2$s', [
+			trim($this->config['mailrelay_hostname'], '.'),
+			$this->config['mailrelay_domain']
+		]);
+	}
+
+	/**
 	 * Get users list to sync.
 	 *
 	 * The following users are excluded:
@@ -79,7 +103,7 @@ class helper
 		$sql_where .= " AND u.user_email <> ''";
 
 		// Exclude users that do not want to receive mass emails
-		$sql_where .= ' AND u.user_allow_massemail <> 1';
+		$sql_where .= ' AND u.user_allow_massemail = 1';
 
 		// Exclude banned users
 		$sql_where .= ' AND u.user_id NOT IN (

@@ -38,6 +38,24 @@ class mailrelay
 			throw new \InvalidArgumentException('Mailrelay API hostname cannot be empty.');
 		}
 
+		// Allowed domains
+		$allowed = [
+			'ipzmarketing.com',
+			'ip-zone.com'
+		];
+
+		// Domain regexp
+		$regexp = '#\.(?:' . implode('|', array_map('preg_quote', $allowed)) . ')$#';
+
+		// Add domain if missing
+		if (!preg_match($regexp, $hostname))
+		{
+			$hostname = vsprintf('%1$s.%2$s', [
+				trim($hostname, '.'),
+				$allowed[0]
+			]);
+		}
+
 		$this->api_url = sprintf('https://%s/ccm/admin/api/version/2/&type=json', $hostname);
 	}
 
