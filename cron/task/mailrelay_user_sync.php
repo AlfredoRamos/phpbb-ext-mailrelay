@@ -39,10 +39,13 @@ class mailrelay_user_sync extends task_base
 	*/
 	public function is_runnable()
 	{
-		return (
-			!empty($this->config['mailrelay_hostname']) &&
-			!empty($this->config['mailrelay_api_key'])
-		);
+		// Get API data
+		$api = [
+			'hostname' => $this->helper->get_hostname(),
+			'key' => $this->config['mailrelay_api_key']
+		];
+
+		return (!empty($api['hostname']) && !empty($api['key']));
 	}
 
 	/**
@@ -71,17 +74,22 @@ class mailrelay_user_sync extends task_base
 		// Get list of users
 		$users = $this->helper->get_users();
 
-		if (empty($users) || empty($this->config['mailrelay_hostname']) || empty($this->config['mailrelay_api_key']))
+		// Get API data
+		$api = [
+			'hostname' => $this->helper->get_hostname(),
+			'key' => $this->config['mailrelay_api_key'],
+			'group' => abs((int) $this->config['mailrelay_group_id'])
+		];
+
+		if (empty($users) || empty($api['hostname']) || empty($api['key']))
 		{
 			return;
 		}
 
 		// Setup Mailrelay API
-		$this->mailrelay->set_hostname($this->config['mailrelay_hostname']);
-		$this->mailrelay->set_api_key($this->config['mailrelay_api_key']);
-		$group_id = abs((int) $this->config['mailrelay_group_id']);
-		$group_id = ($group_id === 0) ? 1 : $group_id;
-		$subscriber_id = -1;
+		$this->mailrelay->set_hostname($api['hostname']);
+		$this->mailrelay->set_api_key($api['key']);
+		$api['group'] = ($api['group'] === 0) ? 1 : $api['group'];
 
 		// Filter users
 		foreach ($users as $key => $value)
@@ -101,11 +109,11 @@ class mailrelay_user_sync extends task_base
 
 			try
 			{
-				$subscriber_id = $this->mailrelay->send_request([
+				$this->mailrelay->send_request([
 					'function' => 'addSubscriber',
 					'email' => $value['email'],
 					'name' => $value['name'],
-					'groups' => [$group_id]
+					'groups' => [$api['group']]
 				]);
 			}
 			catch (\Exception $ex)
@@ -114,20 +122,16 @@ class mailrelay_user_sync extends task_base
 			}
 		}
 
-		// No users were added
-		if ($subscriber_id <= 0)
-		{
-			return;
-		}
+		// Update last sync
+		$this->config->set('mailrelay_last_sync', time());
 
 		// Get last user ID
 		$last_user_id = array_pop($users);
 		$last_user_id = (int) $last_user_id['id'];
 
-		// Update last sync
+		// Update last user ID
 		if (!empty($last_user_id))
 		{
-			$this->config->set('mailrelay_last_sync', time());
 			$this->config->set('mailrelay_last_user_sync', $last_user_id);
 		}
 	}

@@ -44,6 +44,9 @@ class acp_mailrelay_test extends \phpbb_functional_test_case
 		$this->assertTrue($form->has('mailrelay_hostname'));
 		$this->assertSame('', $form->get('mailrelay_hostname')->getValue());
 
+		$this->assertTrue($form->has('mailrelay_domain'));
+		$this->assertSame('ipzmarketing.com', $form->get('mailrelay_domain')->getValue());
+
 		$this->assertTrue($form->has('mailrelay_api_key'));
 		$this->assertSame('', $form->get('mailrelay_api_key')->getValue());
 

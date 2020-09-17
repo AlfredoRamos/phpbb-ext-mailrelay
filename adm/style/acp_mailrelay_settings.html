@@ -20,7 +20,14 @@
 				<br><span>{{ lang('ACP_MAILRELAY_HOSTNAME_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				<input type="text" id="mailrelay-hostname" name="mailrelay_hostname" required="required" autocomplete="off" class="medium"{% if MAILRELAY_HOSTNAME %} value="{{ MAILRELAY_HOSTNAME }}"{% endif %}>
+				https://<input type="text" id="mailrelay-hostname" name="mailrelay_hostname" required="required" autocomplete="off" class="narrow"{% if MAILRELAY_HOSTNAME %} value="{{ MAILRELAY_HOSTNAME }}"{% endif %}>
+				{% if MAILRELAY_DOMAINS %}
+				<select name="mailrelay_domain">
+					{% for DOMAIN in MAILRELAY_DOMAINS %}
+					<option value="{{ DOMAIN.KEY }}"{% if DOMAIN.ENABLED %} selected="selected"{% endif %}>{{ '.' ~ DOMAIN.KEY }}</option>
+					{% endfor %}
+				</select>
+				{% endif %}
 			</dd>
 		</dl>
 		<dl>

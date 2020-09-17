@@ -29,6 +29,8 @@ $lang = array_merge($lang, [
 	'ACP_MAILRELAY_HOSTNAME' => 'Hostname',
 	'ACP_MAILRELAY_HOSTNAME_EXPLAIN' => 'The hostname assigned to you by Mailrelay, or any of the ones you have configured in Mailrelay <samp>Settings</samp> > <samp>Tracking and bounce domains</samp>.',
 
+	'ACP_MAILRELAY_DOMAIN' => 'Mailrelay domain',
+
 	'ACP_MAILRELAY_API_KEY' => 'API key',
 	'ACP_MAILRELAY_API_KEY_EXPLAIN' => 'Any of the API keys you have generated in Mailrelay <samp>Settings</samp> > <samp>API keys</samp>.',
 
