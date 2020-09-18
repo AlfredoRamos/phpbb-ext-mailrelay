@@ -2,6 +2,11 @@
 
 Mailrelay extension for phpBB.
 
+[![Build Status](https://img.shields.io/travis/com/AlfredoRamos/phpbb-ext-mailrelay.svg?style=flat-square)](https://travis-ci.com/AlfredoRamos/phpbb-ext-mailrelay)
+[![Latest Stable Version](https://img.shields.io/github/tag/AlfredoRamos/phpbb-ext-mailrelay.svg?label=stable&style=flat-square)](https://github.com/AlfredoRamos/phpbb-ext-mailrelay/releases)
+[![Code Quality](https://img.shields.io/codacy/grade/4f32454baf88449b864091d05c1a14c5.svg?style=flat-square)](https://app.codacy.com/manual/AlfredoRamos/phpbb-ext-mailrelay/dashboard)
+[![License](https://img.shields.io/github/license/AlfredoRamos/phpbb-ext-mailrelay.svg?style=flat-square)](https://raw.githubusercontent.com/AlfredoRamos/phpbb-ext-mailrelay/master/license.txt)
+
 Automatically synchronizes user emails to [Mailrelay](https://mailrelay.com/) to create, manage and send marketing campaigns.
 
 ### Features
@@ -10,6 +15,9 @@ Automatically synchronizes user emails to [Mailrelay](https://mailrelay.com/) to
 - Set the group ID where users will be added to
 - Set the maximum number of users that will be synchronized on each execution
 - Set frequency of synchronization tasks
+- Exclude bots by default
+- Exclude users that do not allow mass emails by default
+- Exclude banned users by default
 
 ### Requirements
 
@@ -35,7 +43,6 @@ If you like or found my work useful and want to show some appreciation, you can 
 - Download the [latest release](https://github.com/AlfredoRamos/phpbb-ext-mailrelay/releases)
 - Decompress the `*.zip` or `*.tar.gz` file
 - Copy the files and directories inside `{PHPBB_ROOT}/ext/alfredoramos/mailrelay/`
-- Run `composer install --prefer-dist --no-dev` inside `{PHPBB_ROOT}/ext/alfredoramos/mailrelay/`
 - Go to your `Administration Control Panel` > `Customize` > `Manage extensions`
 - Click on `Enable` and confirm
 

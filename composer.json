@@ -5,7 +5,14 @@
 	"homepage": "https://github.com/AlfredoRamos/phpbb-ext-mailrelay",
 	"version": "0.1.0-dev",
 	"time": "2020-09-13",
-	"keywords": ["phpbb", "extension", "mailrelay"],
+	"keywords": [
+		"phpbb",
+		"extension",
+		"mailrelay",
+		"mailrelay-api",
+		"email-sync",
+		"email-marketing"
+	],
 	"license": "GPL-2.0-only",
 	"authors": [
 		{
