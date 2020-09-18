@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACP_MAILRELAY_EXPLAIN' => '<p>Here you can configure the Mailrelay API and its behavior. Consult the <a href="https://www.phpbb.com/customise/db/extension/mailrelay/faq" rel="external nofollow noreferrer noopener" target="_blank"><strong>FAQ</strong></a> for more information. If you require assistance, please visit the <a href="https://www.phpbb.com/customise/db/extension/mailrelat/support" rel="external nofollow noreferrer noopener" target="_blank"><strong>Support</strong></a> section.</p>',
+	'ACP_MAILRELAY_EXPLAIN' => '<p>Here you can configure the Mailrelay API and its behavior. Consult the <a href="https://alfredoramos.mx/mailrelay-extension-for-phpbb" rel="external nofollow noreferrer noopener" target="_blank"><strong>FAQ</strong></a> for more information. If you require assistance, please visit the <a href="https://alfredoramos.mx/mailrelay-extension-for-phpbb#support" rel="external nofollow noreferrer noopener" target="_blank"><strong>Support</strong></a> section.</p>',
 
 	'ACP_MAILRELAY_HOSTNAME' => 'Hostname',
 	'ACP_MAILRELAY_HOSTNAME_EXPLAIN' => 'The hostname assigned to you by Mailrelay, or any of the ones you have configured in Mailrelay <samp>Settings</samp> > <samp>Tracking and bounce domains</samp>.',
@@ -37,8 +37,8 @@ $lang = array_merge($lang, [
 	'ACP_MAILRELAY_GROUP_ID' => 'Group ID',
 	'ACP_MAILRELAY_GROUP_ID_EXPLAIN' => 'The ID of the Mailrelay group where all the emails will be synced to. It must exist in Mailrelay <samp>Subscribers</samp> > <samp>Groups</samp>.',
 
-	'ACP_MAILRELAY_SYNC_PACKET_SIZE' => 'Syncronization packet size',
-	'ACP_MAILRELAY_SYNC_PACKET_SIZE_EXPLAIN' => 'Maximum number of user emails to be processed when synced. A high number could lead to a degradation of the board performance, by using excesive server resources.',
+	'ACP_MAILRELAY_SYNC_PACKET_SIZE' => 'Sync packet size',
+	'ACP_MAILRELAY_SYNC_PACKET_SIZE_EXPLAIN' => 'Maximum number of user emails to be processed when synced. A high number could lead to a degradation of the board performance, by using excessive server resources.',
 
 	'ACP_MAILRELAY_SYNC_FREQUENCY' => 'Sync frequency',
 	'ACP_MAILRELAY_SYNC_FREQUENCY_EXPLAIN' => 'Time between sync events.',
