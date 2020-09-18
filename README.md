@@ -27,7 +27,7 @@ Automatically synchronizes user emails to [Mailrelay](https://mailrelay.com/) to
 
 ### Support
 
-- [**Download page**](https://alfredoramos.mx/mailrelay-extension-for-phpbb)
+- [**Download page**](https://github.com/AlfredoRamos/phpbb-ext-mailrelay/releases)
 - [GitHub issues](https://github.com/AlfredoRamos/phpbb-ext-mailrelay/issues)
 
 ### Donate
