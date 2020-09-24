@@ -27,7 +27,7 @@ $lang = array_merge($lang, [
 	'ACP_MAILRELAY_EXPLAIN' => '<p>Aquí puedes configurar la API de Mailrelay y su comportamiento. Consulta las <a href="https://alfredoramos.mx/mailrelay-extension-for-phpbb" rel="external nofollow noreferrer noopener" target="_blank"><strong>Preguntas Frecuentes</strong></a> para obtener más información. Si requieres de ayuda, por favor visita la sección de <a href="https://alfredoramos.mx/mailrelay-extension-for-phpbb#support" rel="external nofollow noreferrer noopener" target="_blank"><strong>Soporte</strong></a>.</p>',
 
 	'ACP_MAILRELAY_HOSTNAME' => 'Nombre de host',
-	'ACP_MAILRELAY_HOSTNAME_EXPLAIN' => 'El nombre de host asignado por Mailrelay, o cualquiera de los que ha configurado en Mailrelay <samp>Configuración</samp> > <samp>Dominios personalizados</samp>.',
+	'ACP_MAILRELAY_HOSTNAME_EXPLAIN' => 'El nombre de host asignado por Mailrelay. Normalmente es unicamente la parte principal de tu nombre de dominio.',
 
 	'ACP_MAILRELAY_DOMAIN' => 'Dominio de Mailrelay',
 
