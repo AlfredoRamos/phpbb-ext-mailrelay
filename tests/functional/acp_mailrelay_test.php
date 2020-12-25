@@ -19,7 +19,7 @@ class acp_mailrelay_test extends \phpbb_functional_test_case
 		return ['alfredoramos/mailrelay'];
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->add_lang_ext('alfredoramos/mailrelay', [
