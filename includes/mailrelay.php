@@ -13,7 +13,7 @@ use GuzzleHttp\Client;
 
 class mailrelay
 {
-	/** @var \GuzzleHttp\Client */
+	/** @var Client */
 	protected $client;
 
 	/** @var string */
