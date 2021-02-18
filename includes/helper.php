@@ -15,13 +15,13 @@ use phpbb\language\language;
 
 class helper
 {
-	/** @var \phpbb\db\driver\factory */
+	/** @var database */
 	protected $db;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
 	/** @var array */
@@ -30,12 +30,12 @@ class helper
 	/**
 	 * Helper constructor.
 	 *
-	 * @param \phpbb\db\driver\factory	$db
-	 * @param \phpbb\config\config		$config
-	 * @param \phpbb\language\language	$language
-	 * @param string					$users_table
-	 * @param string					$groups_table
-	 * @param string					$banlist_table
+	 * @param database	$db
+	 * @param config	$config
+	 * @param language	$language
+	 * @param string	$users_table
+	 * @param string	$groups_table
+	 * @param string	$banlist_table
 	 *
 	 * @return void
 	 */
