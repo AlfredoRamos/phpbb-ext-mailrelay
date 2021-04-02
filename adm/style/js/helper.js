@@ -1,15 +1,15 @@
 (function() {
 	'use strict';
 
-	// Show/hide API key
+	// Show/hide API token
 	document.body.addEventListener('click', function(e) {
-		let button = e.target.closest('.toggle-api-key');
+		let button = e.target.closest('.toggle-api-token');
 
 		if (!button) {
 			return;
 		}
 
-		let field = document.body.querySelector('#mailrelay-api-key');
+		let field = document.body.querySelector('#mailrelay-api-token');
 		let icon = button.querySelector('.icon');
 
 		if (!field || !icon) {

@@ -2,8 +2,10 @@ services:
     alfredoramos.mailrelay.cron.task.mailrelay_user_sync:
         class: alfredoramos\mailrelay\cron\task\mailrelay_user_sync
         arguments:
+            - '@config'
+            - '@log'
+            - '@user'
             - '@alfredoramos.mailrelay.helper'
-            - '@alfredoramos.mailrelay.mailrelay'
         calls:
             - [set_name, [cron.task.mailrelay_user_sync]]
         tags:

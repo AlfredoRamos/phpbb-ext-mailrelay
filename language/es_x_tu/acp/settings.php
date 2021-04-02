@@ -26,13 +26,11 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_MAILRELAY_EXPLAIN' => '<p>Aquí puedes configurar la API de Mailrelay y su comportamiento. Consulta las <a href="https://alfredoramos.mx/mailrelay-extension-for-phpbb" rel="external nofollow noreferrer noopener" target="_blank"><strong>Preguntas Frecuentes</strong></a> para obtener más información. Si requieres de ayuda, por favor visita la sección de <a href="https://alfredoramos.mx/mailrelay-extension-for-phpbb#support" rel="external nofollow noreferrer noopener" target="_blank"><strong>Soporte</strong></a>.</p>',
 
-	'ACP_MAILRELAY_HOSTNAME' => 'Nombre de host',
-	'ACP_MAILRELAY_HOSTNAME_EXPLAIN' => 'El nombre de host asignado por Mailrelay. Normalmente es unicamente la parte principal de tu nombre de dominio.',
+	'ACP_MAILRELAY_API_ACCOUNT' => 'Nombre de cuenta',
+	'ACP_MAILRELAY_API_ACCOUNT_EXPLAIN' => 'El nombre de cuenta utilizado para iniciar sesión en Mailrelay. Normalmente es unicamente la parte principal de tu nombre de dominio.',
 
-	'ACP_MAILRELAY_DOMAIN' => 'Dominio de Mailrelay',
-
-	'ACP_MAILRELAY_API_KEY' => 'Clave API',
-	'ACP_MAILRELAY_API_KEY_EXPLAIN' => 'Cualquiera de las claves API que has generado en Mailrelay <samp>Configuración</samp> > <samp>Claves API</samp>.',
+	'ACP_MAILRELAY_API_TOKEN' => 'Clave API',
+	'ACP_MAILRELAY_API_TOKEN_EXPLAIN' => 'Cualquiera de las claves API que has generado en Mailrelay <samp>Configuración</samp> > <samp>Claves API</samp>.',
 
 	'ACP_MAILRELAY_GROUP_ID' => 'ID del grupo',
 	'ACP_MAILRELAY_GROUP_ID_EXPLAIN' => 'El ID del grupo donde se sincronizarán todos los correos electrónicos. Debe existir en Mailrelay <samp>Suscriptores</samp> > <samp>Grupos</samp>.',

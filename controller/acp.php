@@ -16,7 +16,6 @@ use phpbb\language\language;
 use phpbb\user;
 use phpbb\log\log;
 use alfredoramos\mailrelay\includes\helper;
-use alfredoramos\mailrelay\includes\mailrelay;
 
 class acp
 {
@@ -41,9 +40,6 @@ class acp
 	/** @var helper */
 	protected $helper;
 
-	/** @var mailrelay */
-	protected $mailrelay;
-
 	/**
 	 * Controller constructor.
 	 *
@@ -54,11 +50,10 @@ class acp
 	 * @param user		$user
 	 * @param log		$log
 	 * @param helper	$helper
-	 * @param mailrelay	$mailrelay
 	 *
 	 * @return void
 	 */
-	public function __construct(config $config, template $template, request $request, language $language, user $user, log $log, helper $helper, mailrelay $mailrelay)
+	public function __construct(config $config, template $template, request $request, language $language, user $user, log $log, helper $helper)
 	{
 		$this->config = $config;
 		$this->template = $template;
@@ -67,7 +62,6 @@ class acp
 		$this->user = $user;
 		$this->log = $log;
 		$this->helper = $helper;
-		$this->mailrelay = $mailrelay;
 	}
 
 	/**
@@ -92,17 +86,11 @@ class acp
 
 		// Field filters
 		$filters = [
-			'mailrelay_hostname' => [
+			'mailrelay_api_account' => [
 				'filter' => FILTER_VALIDATE_DOMAIN,
 				'flags' => FILTER_FLAG_HOSTNAME
 			],
-			'mailrelay_domain' => [
-				'filter' => FILTER_VALIDATE_REGEXP,
-				'options' => [
-					'regexp' => '#^(?:' . implode('|', array_map('preg_quote', $allowed['domains'])) . ')$#'
-				]
-			],
-			'mailrelay_api_key' => [
+			'mailrelay_api_token' => [
 				'filter' => FILTER_VALIDATE_REGEXP,
 				'options' => [
 					'regexp' => '#^\w{40}$#'
@@ -151,24 +139,13 @@ class acp
 
 			// Form data
 			$fields = [
-				'mailrelay_hostname' => $this->request->variable('mailrelay_hostname', ''),
-				'mailrelay_domain' => $this->request->variable('mailrelay_domain', 'ipzmarketing.com'),
-				'mailrelay_api_key' => $this->request->variable('mailrelay_api_key', ''),
+				'mailrelay_api_account' => $this->request->variable('mailrelay_api_account', ''),
+				'mailrelay_api_token' => $this->request->variable('mailrelay_api_token', ''),
 				'mailrelay_group_id' => $this->request->variable('mailrelay_group_id', 1),
 				'mailrelay_sync_packet_size' => $this->request->variable('mailrelay_sync_packet_size', 150),
 				'mailrelay_sync_frequency_number' => $this->request->variable('mailrelay_sync_frequency_number', 1),
 				'mailrelay_sync_frequency_type' => $this->request->variable('mailrelay_sync_frequency_type', 'day')
 			];
-
-			// Validate Mailrelay domain
-			if (!empty($fields['mailrelay_hostname']))
-			{
-				// Hostname must not include Mailrelay domain
-				$fields['mailrelay_hostname'] = str_replace($allowed['domains'], '', $fields['mailrelay_hostname']);
-
-				// Hostname can't start or end with a dot
-				$fields['mailrelay_hostname'] = trim($fields['mailrelay_hostname'], '.');
-			}
 
 			// Validation check
 			if ($this->helper->validate($fields, $filters, $errors))
@@ -209,8 +186,8 @@ class acp
 
 		// Assign template variables
 		$this->template->assign_vars([
-			'MAILRELAY_HOSTNAME'	=> $this->config['mailrelay_hostname'],
-			'MAILRELAY_API_KEY'		=> $this->config['mailrelay_api_key'],
+			'MAILRELAY_API_ACCOUNT'	=> $this->config['mailrelay_api_account'],
+			'MAILRELAY_API_TOKEN'	=> $this->config['mailrelay_api_token'],
 			'MAILRELAY_GROUP_ID'	=> (int) $this->config['mailrelay_group_id'],
 			'MAILRELAY_SYNC_PACKET_SIZE'	=> (int) $this->config['mailrelay_sync_packet_size']
 		]);
@@ -221,15 +198,6 @@ class acp
 			'NUMBER' => $sync_frequency[0],
 			'TYPE' => $sync_frequency[1]
 		]);
-
-		// Assign allowed Mailrelay domains
-		foreach ($allowed['domains'] as $domain)
-		{
-			$this->template->assign_block_vars('MAILRELAY_DOMAINS', [
-				'KEY' => $domain,
-				'ENABLED' => ($domain === $this->config['mailrelay_domain'])
-			]);
-		}
 
 		// Assign allowed frequency values
 		foreach ($allowed['frequencies'] as $type)

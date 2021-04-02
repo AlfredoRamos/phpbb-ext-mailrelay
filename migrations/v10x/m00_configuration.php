@@ -23,15 +23,11 @@ class m00_configuration extends migration
 		return [
 			[
 				'config.add',
-				['mailrelay_hostname', '']
+				['mailrelay_api_account', '']
 			],
 			[
 				'config.add',
-				['mailrelay_domain', 'ipzmarketing.com']
-			],
-			[
-				'config.add',
-				['mailrelay_api_key', '']
+				['mailrelay_api_token', '']
 			],
 			[
 				'config.add',

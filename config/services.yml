@@ -2,9 +2,6 @@ imports:
     - { resource: cron.yml }
 
 services:
-    alfredoramos.mailrelay.mailrelay:
-        class: alfredoramos\mailrelay\includes\mailrelay
-
     alfredoramos.mailrelay.helper:
         class: alfredoramos\mailrelay\includes\helper
         arguments:
@@ -25,4 +22,3 @@ services:
             - '@user'
             - '@log'
             - '@alfredoramos.mailrelay.helper'
-            - '@alfredoramos.mailrelay.mailrelay'
