@@ -16,28 +16,21 @@
 		<legend>{{ lang('SETTINGS') }}</legend>
 		<dl>
 			<dt>
-				<label for="mailrelay-hostname">{{ lang('ACP_MAILRELAY_HOSTNAME') ~ lang('COLON') }}</label>
-				<br><span>{{ lang('ACP_MAILRELAY_HOSTNAME_EXPLAIN') }}</span>
+				<label for="mailrelay-api-account">{{ lang('ACP_MAILRELAY_API_ACCOUNT') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_API_ACCOUNT_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				https://<input type="text" id="mailrelay-hostname" name="mailrelay_hostname" required="required" autocomplete="off" class="narrow"{% if MAILRELAY_HOSTNAME %} value="{{ MAILRELAY_HOSTNAME }}"{% endif %}>
-				{% if MAILRELAY_DOMAINS %}
-				<select name="mailrelay_domain">
-					{% for DOMAIN in MAILRELAY_DOMAINS %}
-					<option value="{{ DOMAIN.KEY }}"{% if DOMAIN.ENABLED %} selected="selected"{% endif %}>{{ '.' ~ DOMAIN.KEY }}</option>
-					{% endfor %}
-				</select>
-				{% endif %}
+				https://<input type="text" id="mailrelay-api-account" name="mailrelay_api_account" required="required" autocomplete="off" class="narrow"{% if MAILRELAY_API_ACCOUNT %} value="{{ MAILRELAY_API_ACCOUNT }}"{% endif %}>.ipzmarketing.com
 			</dd>
 		</dl>
 		<dl>
 			<dt>
-				<label for="mailrelay-api-key">{{ lang('ACP_MAILRELAY_API_KEY') ~ lang('COLON') }}</label>
-				<br><span>{{ lang('ACP_MAILRELAY_API_KEY_EXPLAIN') }}</span>
+				<label for="mailrelay-api-token">{{ lang('ACP_MAILRELAY_API_TOKEN') ~ lang('COLON') }}</label>
+				<br><span>{{ lang('ACP_MAILRELAY_API_TOKEN_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				<input type="password" id="mailrelay-api-key" name="mailrelay_api_key" required="required" autocomplete="off" class="medium"{% if MAILRELAY_API_KEY %} value="{{ MAILRELAY_API_KEY }}"{% endif %}>
-				<span class="toggle-api-key">
+				<input type="password" id="mailrelay-api-token" name="mailrelay_api_token" required="required" autocomplete="off" class="medium"{% if MAILRELAY_API_TOKEN %} value="{{ MAILRELAY_API_TOKEN }}"{% endif %}>
+				<span class="toggle-api-token">
 					<i class="icon fa-lg fa-eye" aria-hidden="true"></i>
 				</span>
 			</dd>

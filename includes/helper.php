@@ -54,30 +54,6 @@ class helper
 	}
 
 	/**
-	 * Get Mailrelay hostname.
-	 *
-	 * @return string
-	 */
-	public function get_hostname()
-	{
-		if (empty($this->config['mailrelay_hostname']))
-		{
-			return '';
-		}
-
-		if (empty($this->config['mailrelay_domain']))
-		{
-			$allowed = $this->allowed_values('domains');
-			$this->config->set('mailrelay_domain', $allowed[0]);
-		}
-
-		return vsprintf('%1$s.%2$s', [
-			trim($this->config['mailrelay_hostname'], '.'),
-			$this->config['mailrelay_domain']
-		]);
-	}
-
-	/**
 	 * Get users list to sync.
 	 *
 	 * The following users are excluded:
@@ -274,7 +250,6 @@ class helper
 	{
 		// Allowed values
 		$allowed = [
-			'domains' => ['ipzmarketing.com', 'ip-zone.com'],
 			'frequencies' => ['hour', 'day', 'week', 'month']
 		];
 

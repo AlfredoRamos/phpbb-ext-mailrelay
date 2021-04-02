@@ -10,26 +10,45 @@
 namespace alfredoramos\mailrelay\cron\task;
 
 use phpbb\cron\task\base as task_base;
+use phpbb\config\config;
+use phpbb\log\log;
+use phpbb\user;
+use alfredoramos\mailrelay\includes\helper;
+use AlfredoRamos\Mailrelay\Client as Mailrelay;
 
 class mailrelay_user_sync extends task_base
 {
+	/** @var config */
 	protected $config;
-	protected $language;
+
+	/** @var log */
+	protected $log;
+
+	/** @var user */
+	protected $user;
+
+	/** @var helper */
 	protected $helper;
+
+	/** @var Mailrelay */
 	protected $mailrelay;
 
 	/**
 	 * Cron task constructor.
 	 *
+	 * @param config	$config
+	 * @param log		$log
+	 * @param user		$user
+	 * @param helper	$helper
+	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(config $config, log $log, user $user, helper $helper)
 	{
-		global $phpbb_container;
-		$this->config = $phpbb_container->get('config');
-		$this->language = $phpbb_container->get('language');
-		$this->helper = $phpbb_container->get('alfredoramos.mailrelay.helper');
-		$this->mailrelay = $phpbb_container->get('alfredoramos.mailrelay.mailrelay');
+		$this->config = $config;
+		$this->log = $log;
+		$this->user = $user;
+		$this->helper = $helper;
 	}
 
 	/**
@@ -41,11 +60,11 @@ class mailrelay_user_sync extends task_base
 	{
 		// Get API data
 		$api = [
-			'hostname' => $this->helper->get_hostname(),
-			'key' => $this->config['mailrelay_api_key']
+			'account' => $this->config['mailrelay_api_account'],
+			'token' => $this->config['mailrelay_api_token']
 		];
 
-		return (!empty($api['hostname']) && !empty($api['key']));
+		return (!empty($api['account']) && !empty($api['token']));
 	}
 
 	/**
@@ -76,49 +95,69 @@ class mailrelay_user_sync extends task_base
 
 		// Get API data
 		$api = [
-			'hostname' => $this->helper->get_hostname(),
-			'key' => $this->config['mailrelay_api_key'],
+			'account' => $this->config['mailrelay_api_account'],
+			'token' => $this->config['mailrelay_api_token'],
 			'group' => abs((int) $this->config['mailrelay_group_id'])
 		];
 
-		if (empty($users) || empty($api['hostname']) || empty($api['key']))
+		if (empty($users) || empty($api['account']) || empty($api['token']))
 		{
 			return;
 		}
 
 		// Setup Mailrelay API
-		$this->mailrelay->set_hostname($api['hostname']);
-		$this->mailrelay->set_api_key($api['key']);
+		if (empty($this->mailrelay))
+		{
+			$this->mailrelay = new Mailrelay([
+				'api_account' => $api['account'],
+				'api_token' => $api['token']
+			]);
+		}
+
 		$api['group'] = ($api['group'] === 0) ? 1 : $api['group'];
 
 		// Filter users
 		foreach ($users as $key => $value)
 		{
 			// Check if user already subscribed
-			$user_exists = $this->mailrelay->send_request([
-				'function' => 'getSubscribers',
-				'email' => $value['email']
+			$user_exists = $this->mailrelay->api('subscribers')->list([
+				'q' => [
+					'banned' => true,
+					'bounced' => true,
+					'reported_spam' => true,
+					'unsubscribed' => true,
+					'email_eq' => $value['email']
+				]
 			]);
 
-			// User exists not exist
+			// User exists
 			if (!empty($user_exists))
 			{
 				unset($users[$key]);
 				continue;
 			}
 
+			// Sync user
 			try
 			{
-				$this->mailrelay->send_request([
-					'function' => 'addSubscriber',
+				$this->mailrelay->api('subscribers')->sync([
+					'status' => 'active',
 					'email' => $value['email'],
 					'name' => $value['name'],
-					'groups' => [$api['group']]
+					'group_ids' => [$api['group']],
+					'replace_groups' => true
 				]);
 			}
-			catch (\Exception $ex)
+			catch (\InvalidArgumentException $ex)
 			{
-				// TODO: add error log
+				// Add an entry in the error log
+				$this->log->add(
+					'critical',
+					null,
+					null,
+					false,
+					[$ex->getMessage()]
+				);
 			}
 		}
 
@@ -133,6 +172,19 @@ class mailrelay_user_sync extends task_base
 		if (!empty($last_user_id))
 		{
 			$this->config->set('mailrelay_last_user_sync', $last_user_id);
+		}
+
+		// Add an entry in the admin log
+		if (!empty($users))
+		{
+			$this->log->add(
+				'admin',
+				$this->user->data['user_id'],
+				$this->user->ip,
+				'LOG_MAILRELAY_USER_SYNC',
+				false,
+				[count($users)]
+			);
 		}
 	}
 }

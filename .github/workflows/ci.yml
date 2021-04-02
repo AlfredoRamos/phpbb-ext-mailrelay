@@ -1,4 +1,4 @@
-name: GitHub Actions CI
+name: CI
 
 on:
   push:
@@ -15,12 +15,13 @@ env:
   SNIFF: 1
   IMAGE_ICC: 1
   EPV: 1
-  EXECUTABLE_FILES: 0
-  EXTDEPS: 0
+  EXECUTABLE_FILES: 1
+  EXTDEPS: 1
   PHPBB_BRANCH: 3.3.x
 
 jobs:
   test:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     name: php ${{ matrix.php-version }}, ${{ matrix.db-type }}
     runs-on: ubuntu-18.04
     services:
@@ -64,21 +65,18 @@ jobs:
     strategy:
       matrix:
         include:
-          - php-version: '7.1'
+          - php-version: '7.2'
             db-type: 'none'
             db-version: 'none'
-          - php-version: '7.1'
+          - php-version: '7.2'
             db-type: 'mysql'
             db-version: '5.7'
-          - php-version: '7.1'
-            db-type: 'mariadb'
-            db-version: '10.5'
-          - php-version: '7.1'
-            db-type: 'postgres'
-            db-version: '13.1'
           - php-version: '7.2'
             db-type: 'mariadb'
             db-version: '10.5'
+          - php-version: '7.2'
+            db-type: 'postgres'
+            db-version: '13.1'
           - php-version: '7.3'
             db-type: 'mariadb'
             db-version: '10.5'
@@ -120,13 +118,12 @@ jobs:
         working-directory: phpBB3/phpBB
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
-          composer update --no-install --prefer-dist
 
       - name: Setup cache
         uses: actions/cache@v2
         with:
           path: ${{ steps.setup-composer.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock', '**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock', '**/composer.json', 'phpBB3/phpBB/ext/${{ env.EXTNAME }}/composer.lock', 'phpBB3/phpBB/ext/${{ env.EXTNAME }}/composer.json') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -138,7 +135,6 @@ jobs:
         if: ${{ env.EXTDEPS == 1 }}
         working-directory: phpBB3/phpBB/ext/${{ env.EXTNAME }}
         run: |
-          composer require -n --prefer-dist --no-progress 'composer/package-versions-deprecated:^1.11.99' 'ocramius/proxy-manager:~2.1.1'
           composer update -n --no-dev --prefer-dist --no-progress
 
       - name: Setup EPV

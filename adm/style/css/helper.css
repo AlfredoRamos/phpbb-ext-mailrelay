@@ -3,7 +3,7 @@
 	font-family: Consolas, monaco, monospace;
 }
 
-.toggle-api-key {
+.toggle-api-token {
 	cursor: pointer;
 	color: #d58512;
 }
