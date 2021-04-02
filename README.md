@@ -22,9 +22,9 @@ Automatically synchronizes user emails to [Mailrelay](https://mailrelay.com/) to
 
 ### Requirements
 
-- PHP 7.1.3 or greater
+- PHP 7.2.5 or greater
 - phpBB 3.3 or greate
-- Mailrelay API hostname and key
+- Mailrelay API account and token
 
 ### Support
 
@@ -36,7 +36,7 @@ Automatically synchronizes user emails to [Mailrelay](https://mailrelay.com/) to
 
 If you like or found my work useful and want to show some appreciation, you can consider supporting its development by giving a donation.
 
-[![Donate with PayPal](https://alfredoramos.mx/assets/images/donate.svg)](https://alfredoramos.mx/donate/)
+[![Donate with PayPal](https://alfredoramos.mx/images/donate.svg)](https://alfredoramos.mx/donate/)
 
 [![Donate with PayPal](https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg)](https://alfredoramos.mx/donate/)
 
@@ -56,7 +56,7 @@ If you like or found my work useful and want to show some appreciation, you can 
 
 - Login to your Mailrelay administration panel
 - Go to `Settings` > `API keys`
-- Generate a new API key if you don't have one already
+- Generate a new API token if you don't have one already
 - Copy the API key
 - Optionally generate a new group in `Subscribers` > `Groups`
 - Copy the group ID
@@ -65,7 +65,7 @@ If you like or found my work useful and want to show some appreciation, you can 
 
 - Login to your phpBB `Administration Control Panel`
 - Go to `Extensions` > `Mailrelay`
-- Paste the API key in `API key`
+- Paste the API key in `API token`
 - Paste the group ID in `Group ID`
 - Set the maximum number of users to synchronize on each cron task execution in `Sync packet size`
 - Set the time between sync event in `Sync frequency`
