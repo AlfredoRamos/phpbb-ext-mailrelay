@@ -25,7 +25,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_MAILRELAY' => 'Mailrelay',
-	'LOG_MAILRELAY_DATA' => '<strong>Datos de Mailrelay modificados</strong><br>» %s',
-	'LOG_MAILRELAY_USER_SYNC' => '<strong>Sincronización de usuarios a Mailrelay</strong><br>» %d usuarios fueron procesados',
-	'LOG_MAILRELAY_USER_SYNC_ERROR' => '<strong>Falló la sincronización de usuarios a Mailrelay</strong><br>» %s'
+	'LOG_MAILRELAY_DATA' => '<strong>Mailrelay data changed</strong><br>» %s',
+	'LOG_MAILRELAY_USER_SYNC' => '<strong>Mailrelay user sync</strong><br>» %d users were processed',
+	'LOG_MAILRELAY_USER_SYNC_ERROR' => '<strong>Mailrelay user sync failed</strong><br>» %s'
 ]);
