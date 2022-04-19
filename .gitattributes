@@ -7,4 +7,5 @@ crowdin.yml export-ignore
 .rubocop.yml export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
+.editorconfig export-ignore
 *.md export-ignore
