@@ -16,6 +16,7 @@ use phpbb\language\language;
 use phpbb\user;
 use phpbb\log\log;
 use alfredoramos\mailrelay\includes\helper;
+use AlfredoRamos\Mailrelay\Client as Mailrelay;
 
 class acp
 {
@@ -39,6 +40,9 @@ class acp
 
 	/** @var helper */
 	protected $helper;
+
+	/** @var Mailrelay */
+	protected $mailrelay;
 
 	/**
 	 * Controller constructor.
@@ -130,11 +134,7 @@ class acp
 		{
 			if (!check_form_key('alfredoramos_mailrelay'))
 			{
-				trigger_error(
-					$this->language->lang('FORM_INVALID') .
-					adm_back_link($u_action),
-					E_USER_WARNING
-				);
+				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($u_action), E_USER_WARNING);
 			}
 
 			// Form data
@@ -150,37 +150,83 @@ class acp
 			// Validation check
 			if ($this->helper->validate($fields, $filters, $errors))
 			{
-				$fields['mailrelay_sync_frequency'] = vsprintf('+%1$d %2$s', [
-					$fields['mailrelay_sync_frequency_number'],
-					$fields['mailrelay_sync_frequency_type']
-				]);
-
-				unset(
-					$fields['mailrelay_sync_frequency_number'],
-					$fields['mailrelay_sync_frequency_type']
-				);
-
-				// Save configuration
-				foreach ($fields as $key => $value)
+				// Setup Mailrelay API
+				if (empty($this->mailrelay))
 				{
-					$this->config->set($key, $value);
+					$this->mailrelay = new Mailrelay([
+						'api_account' => $fields['mailrelay_api_account'],
+						'api_token' => $fields['mailrelay_api_token']
+					]);
 				}
 
-				// Admin log
-				$this->log->add(
-					'admin',
-					$this->user->data['user_id'],
-					$this->user->ip,
-					'LOG_MAILRELAY_DATA',
-					false,
-					[$this->language->lang('SETTINGS')]
-				);
+				// Validate API data
+				try
+				{
+					$info = $this->mailrelay->api('ping')->info();
+				}
+				catch (\Exception $ex)
+				{
+					$info = ['status' => $ex->getCode()];
+				}
 
-				// Confirm dialog
-				trigger_error(
-					$this->language->lang('CONFIG_UPDATED') .
-					adm_back_link($u_action)
-				);
+				// Add API errors
+				if ($info['status'] !== 204)
+				{
+					$err = 'UNKNOWN';
+
+					switch ($info['status'])
+					{
+						case 401:
+							$err = 'INVALID_API_KEY';
+						break;
+
+						case 404:
+							$err = 'ACCOUNT_NOT_FOUND';
+						break;
+
+						case 500:
+							$err = 'INTERNAL_ERROR';
+						break;
+					}
+
+					$errors[]['message'] = $this->language->lang(
+						'ACP_MAILRELAY_VALIDATE_INVALID_API_DATA',
+						$this->language->lang(sprintf('ACP_MAILRELAY_ERROR_%s', strtoupper($err)))
+					);
+				}
+
+				// API validation
+				if ($info['status'] === 204)
+				{
+					$fields['mailrelay_sync_frequency'] = vsprintf('+%1$d %2$s', [
+						$fields['mailrelay_sync_frequency_number'],
+						$fields['mailrelay_sync_frequency_type']
+					]);
+
+					unset(
+						$fields['mailrelay_sync_frequency_number'],
+						$fields['mailrelay_sync_frequency_type']
+					);
+
+					// Save configuration
+					foreach ($fields as $key => $value)
+					{
+						$this->config->set($key, $value);
+					}
+
+					// Admin log
+					$this->log->add(
+						'admin',
+						$this->user->data['user_id'],
+						$this->user->ip,
+						'LOG_MAILRELAY_DATA',
+						false,
+						[$this->language->lang('SETTINGS')]
+					);
+
+					// Confirm dialog
+					trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($u_action));
+				}
 			}
 		}
 

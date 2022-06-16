@@ -12,7 +12,7 @@ services:
             - '%tables.groups%'
             - '%tables.banlist%'
 
-    alfredoramos.mailrelay.acp.controller:
+    alfredoramos.mailrelay.controller.acp:
         class: alfredoramos\mailrelay\controller\acp
         arguments:
             - '@config'

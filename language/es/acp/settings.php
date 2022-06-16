@@ -46,5 +46,5 @@ $lang = array_merge($lang, [
 	'ACP_MAILRELAY_WEEK' => 'semana',
 	'ACP_MAILRELAY_MONTH' => 'mes',
 
-	'ACP_MAILRELAY_VALIDATE_INVALID_FIELDS' => 'Valores inválidos para los campos: <samp>%s</samp>',
+	'ACP_MAILRELAY_VALIDATE_INVALID_FIELDS' => 'Valores inválidos para los campos: <samp>%s</samp>'
 ]);
