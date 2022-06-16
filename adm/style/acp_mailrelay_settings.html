@@ -21,6 +21,9 @@
 			</dt>
 			<dd>
 				https://<input type="text" id="mailrelay-api-account" name="mailrelay_api_account" required="required" autocomplete="off" class="narrow"{% if MAILRELAY_API_ACCOUNT %} value="{{ MAILRELAY_API_ACCOUNT }}"{% endif %}>.ipzmarketing.com
+				{% if MAILRELAY_API_ACCOUNT %}
+				<a href="{{ 'https://' ~ MAILRELAY_API_ACCOUNT ~ '.ipzmarketing.com' }}" rel="external nofollow noreferrer noopener" target="_blank"><i class="icon fa-lg fa-external-link" aria-hidden="true"></i></a>
+				{% endif %}
 			</dd>
 		</dl>
 		<dl>

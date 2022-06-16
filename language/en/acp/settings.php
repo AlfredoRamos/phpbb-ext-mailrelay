@@ -47,4 +47,10 @@ $lang = array_merge($lang, [
 	'ACP_MAILRELAY_MONTH' => 'month',
 
 	'ACP_MAILRELAY_VALIDATE_INVALID_FIELDS' => 'Invalid values for fields: <samp>%s</samp>',
+	'ACP_MAILRELAY_VALIDATE_INVALID_API_DATA' => 'Invalid Mailrelay API data: %s',
+
+	'ACP_MAILRELAY_ERROR_INVALID_API_KEY' => 'The API key was not sent or is invalid.',
+	'ACP_MAILRELAY_ERROR_ACCOUNT_NOT_FOUND' => 'Account not found.',
+	'ACP_MAILRELAY_ERROR_INTERNAL_ERROR' => 'An internal error happened. Try again later.',
+	'ACP_MAILRELAY_ERROR_UNKNOWN' => 'Unknown error.'
 ]);
