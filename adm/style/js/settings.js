@@ -1,8 +1,8 @@
-(function() {
+(() => {
 	'use strict';
 
 	// Show/hide API token
-	document.body.addEventListener('click', function(e) {
+	document.body.addEventListener('click', (e) => {
 		let button = e.target.closest('.toggle-api-token');
 
 		if (!button) {

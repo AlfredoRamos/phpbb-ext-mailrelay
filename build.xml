@@ -18,17 +18,20 @@
 		<echo msg="Cleaning files and directories" />
 
 		<delete dir="${dir}/tests" />
-		<delete dir="${dir}/.github"/>
+		<delete dir="${dir}/node_modules" />
+		<delete dir="${dir}/.github" />
+		<delete dir="${dir}/.vscode" />
 		<delete file="${dir}/.gitignore" />
 		<delete file="${dir}/.gitattributes" />
 		<delete file="${dir}/.editorconfig" />
-		<delete file="${dir}/.rubocop.yml" />
+		<delete file="${dir}/.stylelintrc.json" />
 		<delete file="${dir}/build.xml" />
 		<delete file="${dir}/crowdin.yml" />
 		<delete file="${dir}/phpunit.xml.dist" />
 		<delete file="${dir}/README.md" />
-		<delete file="${dir}/Gemfile" />
-		<delete file="${dir}/Rakefile" />
+		<delete file="${dir}/package.json" />
+		<delete file="${dir}/package-lock.json" />
+		<delete file="${dir}/postcss.config.js" />
 
 		<if>
 			<and>
@@ -53,7 +56,7 @@
 	<target name="all" depends="prepare-structure,package" />
 
 	<!-- Remove incomplete language pack -->
-	<target name="clean-lang">
+	<target name="remove-lang">
 		<if>
 			<and>
 				<not>
@@ -69,6 +72,12 @@
 		</if>
 	</target>
 
+	<!-- Replace invalid characters in language files -->
+	<target name="clean-lang">
+		<echo msg="Replacing invalid characters: ${filename}" />
+		<exec dir="${package-directory}/language" command="sed -ri 's|'\\\\\''|’|g' ${filename}" checkreturn="true" />
+	</target>
+
 	<!-- Clean up the language directory -->
 	<target name="clean-langs">
 		<if>
@@ -77,9 +86,17 @@
 			</not>
 			<then>
 				<echo msg="Deleting incomplete languages" />
-				<foreach list="${exclude-langs}" param="lang" target="clean-lang" />
+				<foreach list="${exclude-langs}" param="lang" target="remove-lang" />
 			</then>
 		</if>
+
+		<foreach param="filename" target="clean-lang">
+			<fileset dir="${package-directory}/language">
+				<patternset>
+					<include name="**/*.php" />
+				</patternset>
+			</fileset>
+		</foreach>
 	</target>
 
 	<!-- Clean up the build directory -->
@@ -88,13 +105,10 @@
 	</target>
 
 	<!-- Minify CSS and JS assets -->
-	<!--
 	<target name="minify-assets">
 		<echo msg="Minifying assets" />
-		<exec command="bundle exec rake build:all" checkreturn="true" />
-		<exec command="vim -c 'argdo setf css | execute &quot;normal! gg=G&quot; | update | quitall' $(find . -type f -path '*.css' | xargs)" checkreturn="true" />
+		<exec command="npm run build" checkreturn="true" />
 	</target>
-	-->
 
 	<!-- Recreate the necessary folders -->
 	<target name="prepare-structure" depends="clean">
@@ -132,14 +146,12 @@
 			outputProperty='package-version' />
 
 		<!-- Build and ninify assets -->
-		<!--
 		<if>
 			<equals arg1="${env}" arg2="production" />
 			<then>
 				<phingcall target="minify-assets" />
 			</then>
 		</if>
-		-->
 
 		<phingcall target="wrap-package">
 			<property name="destination-filename" value="${build-directory}/upload/${vendor-name}_${extension-name}_${package-version}" />

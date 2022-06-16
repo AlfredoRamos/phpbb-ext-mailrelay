@@ -16,7 +16,7 @@ env:
 jobs:
   test:
     if: ${{ !contains(github.event.head_commit.message, 'skip ci') }}
-    name: php ${{ matrix.php-version }}, ${{ matrix.db-type }}
+    name: php ${{ matrix.php-version }}, ${{ matrix.db-type }} ${{ matrix.db-version }}
     runs-on: ubuntu-18.04
     services:
       mysql:
@@ -33,7 +33,7 @@ jobs:
           --health-retries=3
 
       postgres:
-        image: ${{ (matrix.db-type == 'postgres') && matrix.db-type || 'postgres' }}:${{ (matrix.db-type == 'postgres' && matrix.db-version != 'none') && matrix.db-version || 'latest' }}
+        image: ${{ (matrix.db-type == 'postgres') && matrix.db-type || 'postgres' }}:${{ (matrix.db-type == 'postgres' && matrix.db-version != 'none') && matrix.db-version || 'alpine' }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -64,7 +64,7 @@ jobs:
             db-version: '10.5'
           - php-version: '7.2'
             db-type: 'postgres'
-            db-version: '13.1'
+            db-version: '13-alpine'
           - php-version: '7.3'
             db-type: 'mariadb'
             db-version: '10.5'
@@ -77,9 +77,12 @@ jobs:
           - php-version: '8.0'
             db-type: 'mariadb'
             db-version: '10.5'
-          #- php-version: '8.1'
-          #  db-type: 'mariadb'
-          #  db-version: '10.5'
+          - php-version: '8.1'
+            db-type: 'mariadb'
+            db-version: '10.6'
+          - php-version: '8.2'
+            db-type: 'postgres'
+            db-version: '14-alpine'
     steps:
       - name: Checkout phpBB
         uses: actions/checkout@v3
@@ -110,7 +113,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.setup-composer.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock', '**/composer.json', 'phpBB3/phpBB/ext/${{ env.EXTNAME }}/composer.lock', 'phpBB3/phpBB/ext/${{ env.EXTNAME }}/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock', '**/composer.json') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -118,12 +121,22 @@ jobs:
         working-directory: phpBB3
         run: .github/setup-phpbb.sh $DB $PHP_VERSION $NOTESTS
 
-      # - name: Setup Ruby
-      #   uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.0'
-      #     bundler-cache: true
-      #     working-directory: extension
+      - name: Setup Node cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+
+      - name: Install Node dependencies
+        working-directory: extension
+        run: npm install
 
       - name: Setup extension
         working-directory: extension
@@ -172,23 +185,3 @@ jobs:
         if: ${{ env.NOTESTS != 1 }}
         working-directory: phpBB3
         run: phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/ci/phpunit-$DB-github.xml --bootstrap tests/bootstrap.php
-
-  # lint:
-  #   if: ${{ !contains(github.event.head_commit.message, 'skip lint') }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout extension
-  #       uses: actions/checkout@v3
-  #       with:
-  #         path: extension
-  #
-  #     - name: Setup Ruby
-  #       uses: ruby/setup-ruby@v1
-  #       with:
-  #         ruby-version: '3.0'
-  #         bundler-cache: true
-  #         working-directory: extension
-  #
-  #     - name: Test Ruby
-  #       working-directory: extension
-  #       run: bundle exec rake rubocop
