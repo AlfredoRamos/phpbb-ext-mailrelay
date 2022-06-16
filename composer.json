@@ -18,14 +18,14 @@
 		{
 			"name": "Alfredo Ramos",
 			"email": "alfredo.ramos@protonmail.com",
-			"homepage": "https://alfredoramos.mx/",
+			"homepage": "https://alfredoramos.mx",
 			"role": "Lead Developer"
 		}
 	],
 	"require": {
 		"php": "^7.1.3 || ^8.0.0",
 		"composer/installers": "^2.0.0",
-		"alfredo-ramos/mailrelay-api-client": "^0.1.0"
+		"alfredo-ramos/mailrelay-api-client": "^0.1.1"
 	},
 	"require-dev": {
 		"phing/phing": "^2.16.0",
@@ -44,6 +44,9 @@
 		}
 	},
 	"config": {
-		"prepend-autoloader": false
+		"prepend-autoloader": false,
+		"allow-plugins": {
+			"composer/installers": true
+		}
 	}
 }
